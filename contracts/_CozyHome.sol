@@ -14,7 +14,7 @@ contract CozyHome is ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
-    uint public flor_price_pre_sale = 0.02 ether;
+    uint256 public flor_price_pre_sale = 0.02 ether;
     uint256 public max_pre_sale_purchase = 3;
     uint256 public total_first_mintable = 6800;
     uint256 public max_pre_sale_quantity = 1000;
@@ -53,7 +53,7 @@ contract CozyHome is ERC721URIStorage, Ownable {
         investorsInheritance.percentage = _percent;
     }
 
-    function changeFlorPrice(uint _new_price) public onlyOwner {
+    function changeFlorPrice(uint256 _new_price) public onlyOwner {
         flor_price_pre_sale = _new_price;
     }
 
@@ -68,10 +68,6 @@ contract CozyHome is ERC721URIStorage, Ownable {
 
     function minterAdd(uint256 nftid) private {
         mintOwners[msg.sender].push(nftid);
-    }
-    
-    function getSaleState() view public returns(State) {
-        return saleState;
     }
 
     function mintCollectedAllowed(address _recipient)

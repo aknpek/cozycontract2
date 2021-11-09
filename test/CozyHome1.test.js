@@ -18,6 +18,7 @@ contract('CozyHome', () => {
     });
 
     it("Test If our Contract Deployed", async() => {
+        console.log('Current Contract Address ', cozyHome.address)
         assert(cozyHome.address !== '');
     });
     it("Test current Contract Owner", async() => {
@@ -62,5 +63,10 @@ contract('CozyHome', () => {
     it("Initial Presale State", async() => {
         const preSale = await cozyHome.preSale();
         assert(preSale === false);
+    })
+
+    it("Test Sale State", async() => {
+        const saleSate = await cozyHome.getSaleState();
+        assert(saleSate.toNumber() === 0);
     })
 });
