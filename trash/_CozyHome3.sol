@@ -14,7 +14,7 @@ contract CozyHome is ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
-    uint256 public flor_price_pre_sale = 0.3 ether;
+    uint public flor_price_pre_sale = 0.3 ether;
     uint256 public max_pre_sale_purchase = 3;
     uint256 public total_first_mintable = 6800;
     uint256 public max_pre_sale_quantity = 1000;
@@ -37,19 +37,11 @@ contract CozyHome is ERC721URIStorage, Ownable {
 
     State public saleState = State.Open;
 
-    constructor(uint256 _percent) ERC721("CozyHome", "NFT") {
+    constructor(uint256 _percent) public ERC721("CozyHome", "NFT") {
         // contract owner will have the first place to set inheritence percentage
         // this number will be fixed for the contract like 0.05
         // investorsInheritance.addr = msg.sender;
         // investorsInheritance.percentage = _percent;
-    }
-
-    event Received(address, uint256);
-
-    fallback() external payable {}
-
-    receive() external payable {
-        emit Received(msg.sender, msg.value);
     }
 
     function changePreSaleState(bool _status) public onlyOwner {
@@ -61,7 +53,7 @@ contract CozyHome is ERC721URIStorage, Ownable {
         investorsInheritance.percentage = _percent;
     }
 
-    function changeFlorPrice(uint256 _new_price) public onlyOwner {
+    function changeFlorPrice(uint _new_price) public onlyOwner {
         flor_price_pre_sale = _new_price;
     }
 
@@ -69,6 +61,7 @@ contract CozyHome is ERC721URIStorage, Ownable {
         if (_input == 0) {
             saleState = State.Closed;
         } else {
+            // Sale State Started Again by owner
             saleState = State.Open;
         }
     }
@@ -76,8 +69,8 @@ contract CozyHome is ERC721URIStorage, Ownable {
     function minterAdd(uint256 nftid) private {
         mintOwners[msg.sender].push(nftid);
     }
-
-    function getSaleState() public view returns (State) {
+    
+    function getSaleState() view public returns(State) {
         return saleState;
     }
 
