@@ -179,12 +179,4 @@ contract CozyHome is ERC721URIStorage, Ownable {
         _recipient.transfer(_amount);
         return true;
     }
-
-    function setBaseURI(string memory _baseURI) external onlyOwner {
-        baseURI = _baseURI;
-    }
-
-    function getBaseURI() external view onlyOwner returns (string memory) {
-        return baseURI;
-    }
 }
