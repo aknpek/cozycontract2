@@ -3,7 +3,7 @@ Testing For Other Users
 */
 const CozyHome = artifacts.require('CozyHome');
 const other_address = "0x7bDD9D75Ef2e6572EC1cBd663fA6AC56a4347CA5"
-const max_mintable_pre_sale = 3;
+const max_mintable_pre_sale = 5;
 
 
 contract('CozyHome', async() => {
@@ -77,8 +77,4 @@ contract('CozyHome', async() => {
         const number_of_collected = await cozyHome.getNumberOfCollected(other_address, {from: other_address});
         assert.equal(number_of_collected, 0);
     });
-
-
-  
-    
 })

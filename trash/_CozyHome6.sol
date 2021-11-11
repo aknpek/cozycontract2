@@ -18,7 +18,7 @@ contract CozyHome is ERC721URIStorage, Ownable {
     uint256 public max_pre_sale_purchase = 3;
     uint256 public total_first_mintable = 6800;
     uint256 public max_pre_sale_quantity = 1000;
-    uint256 public maxAllowableMintPresale = 5;
+    uint256 public maxAllowableMintPresale = 3;
     string private baseURI =
         "https://gateway.pinata.cloud/ipfs/QmcP9hxrnC1T5ATPmq2saFeAM1ypFX9BnAswCdHB9JCjLA/";
     bool public preSale = true;
@@ -79,8 +79,8 @@ contract CozyHome is ERC721URIStorage, Ownable {
     }
 
     /* ---------------------- Mint Related Operations ---------------------- */
-    function minterAdd(address _recipient, uint256 nftid) private {
-        mintOwners[_recipient].push(nftid);
+    function minterAdd(uint256 nftid) private {
+        mintOwners[msg.sender].push(nftid);
     }
 
     function mintCollectedAllowed(address _recipient)
@@ -110,9 +110,13 @@ contract CozyHome is ERC721URIStorage, Ownable {
     {
         uint256 number_of_collected = getNumberOfCollected(_recipient);
         if ((_quantity + number_of_collected) <= maxAllowableMintPresale) {
-            return (_quantity);
+            return (_quantity - number_of_collected);
         } else {
-            return maxAllowableMintPresale - number_of_collected;
+            if (_quantity > maxAllowableMintPresale) {
+                return (maxAllowableMintPresale - number_of_collected);
+            } else {
+                return 0;
+            }
         }
     }
 
@@ -190,7 +194,7 @@ contract CozyHome is ERC721URIStorage, Ownable {
         _setTokenURI(newItemId, _tokenURI);
 
         firstOwners[newItemId] = payable(_recipient);
-        minterAdd(_recipient, newItemId);
+        minterAdd(newItemId);
 
         return newItemId;
     }
@@ -199,31 +203,26 @@ contract CozyHome is ERC721URIStorage, Ownable {
         address _recipient,
         string memory _tokenURI,
         uint256 _quantity
-    ) public payable saleStateCheck preSaleCheck returns (uint256[] memory) {
+    ) public saleStateCheck preSaleCheck returns (uint256[] memory) {
         // if you have enough money?
-
         if (
             mintCollectedAllowed(_recipient) &&
             maxAllowableMintPresale >= _quantity
         ) {
+            uint256[] memory mintedItems;
             uint256 number_of_mintable = numberOfMintable(
                 _recipient,
                 _quantity
             );
-            uint256[] memory mintedItems = new uint256[](number_of_mintable);
-
-            require(
-                msg.value == flor_price_pre_sale * number_of_mintable,
-                "ERC721Metadata: Not Enough Money To Mint"
-            );
             for (uint256 i = 0; i < number_of_mintable; i++) {
                 uint256 newItemId = mintNow(_recipient, _tokenURI);
-                mintedItems[i] = (newItemId);
+                // mintedItems[i] = (newItemId);
                 // mintedItems[i] = i;
             }
             // mintedItems[0] = 1;
-            return mintedItems;
-        } else {}
+            // return mintedItems;
+        }
+        // else {}
     }
 
     /* ---------------------- Wallet Finance Related ---------------------- */

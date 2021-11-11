@@ -12,7 +12,7 @@ const sendAmount = 69 * 10 ** decimals;
 const converter = 10 ** decimals
 const recipient_address = "0xc1cE8F9e4F70A10C30c7827F014c735eb25477ad"
 const number_of_collected = 0;
-const max_mintable_pre_sale = 3;
+const max_mintable_pre_sale = 5;
 
 
 contract('CozyHome', async() => {

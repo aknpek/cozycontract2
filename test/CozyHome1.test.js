@@ -4,11 +4,12 @@ const CozyHome = artifacts.require('CozyHome');
 const contract_deployer = "0xc1cE8F9e4F70A10C30c7827F014c735eb25477ad"
 const contract_name = "CozyHome";
 const contract_symbol = "NFT";
-const most_pre_sale_allowable = 3;
+const most_pre_sale_allowable = 5;
 const max_pre_sale_quantity_test = 1000;
 const total_first_mintable_test = 6800;
 const flor_price_pre_sale_test = 0.02
 // Calling And Approving Classic Values
+const initial_pre_sale_state = true;
 
 
 contract('CozyHome', () => {
@@ -62,7 +63,7 @@ contract('CozyHome', () => {
 
     it("Initial Presale State", async() => {
         const preSale = await cozyHome.preSale();
-        assert(preSale === false);
+        assert(preSale === initial_pre_sale_state);
     })
 
     it("Test Sale State", async() => {
