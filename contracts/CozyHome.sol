@@ -11,6 +11,26 @@ struct Investors {
 }
 
 contract CozyHome is ERC721URIStorage, Ownable {
+    function uint2str(uint256 _i) internal pure returns (string memory str) {
+        if (_i == 0) {
+            return "0";
+        }
+        uint256 j = _i;
+        uint256 length;
+        while (j != 0) {
+            length++;
+            j /= 10;
+        }
+        bytes memory bstr = new bytes(length);
+        uint256 k = length;
+        j = _i;
+        while (j != 0) {
+            bstr[--k] = bytes1(uint8(48 + (j % 10)));
+            j /= 10;
+        }
+        str = string(bstr);
+    }
+
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
@@ -167,16 +187,19 @@ contract CozyHome is ERC721URIStorage, Ownable {
         string memory _tokenURI = _tokenURIs[tokenId];
         string memory base = _baseURI();
 
+        return string(abi.encodePacked(base, uint2str(tokenId)));
+
         // If there is no base URI, return the token URI.
-        if (bytes(base).length == 0) {
-            return _tokenURI;
-        }
+        // if (bytes(base).length == 0) {
+        //     return _tokenURI;
+        // }
+
         // If both are set, concatenate the baseURI and tokenURI (via abi.encodePacked).
-        if (bytes(_tokenURI).length > 0) {
-            return string(abi.encodePacked(base, _tokenURI));
-        }
+        // if (bytes(_tokenURI).length > 0) {
+        //     return string(abi.encodePacked(base, _tokenURI));
+        // }
         // If there is a baseURI but no tokenURI, concatenate the tokenID to the baseURI.
-        // return string(abi.encodePacked(base, tokenId.toString()));
+        // return string(abi.encodePacked(base, uintToString(tokenId)));
     }
 
     function mintNow(address _recipient, string memory _tokenURI)
@@ -200,8 +223,6 @@ contract CozyHome is ERC721URIStorage, Ownable {
         string memory _tokenURI,
         uint256 _quantity
     ) public payable saleStateCheck preSaleCheck returns (uint256[] memory) {
-        // if you have enough money?
-
         if (
             mintCollectedAllowed(_recipient) &&
             maxAllowableMintPresale >= _quantity
@@ -219,9 +240,7 @@ contract CozyHome is ERC721URIStorage, Ownable {
             for (uint256 i = 0; i < number_of_mintable; i++) {
                 uint256 newItemId = mintNow(_recipient, _tokenURI);
                 mintedItems[i] = (newItemId);
-                // mintedItems[i] = i;
             }
-            // mintedItems[0] = 1;
             return mintedItems;
         } else {}
     }
