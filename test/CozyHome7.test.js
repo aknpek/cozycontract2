@@ -18,11 +18,19 @@ contract('CozyHome', async() => {
         console.log(minted_list, "This is our Minted List");
         const get_number_of_collected = await cozyHome.getNumberOfCollected(cozyHomeContractOwner);
         assert.equal(get_number_of_collected.toNumber(), number_of_mints);
+        const get_first_token_owner_address = await cozyHome.firstOwners(1);
+        assert(get_first_token_owner_address === cozyHomeContractOwner);
+
+        const get_balance_of_specific_contract = await cozyHome.balanceOf(cozyHomeContractOwner);
+        assert.equal(get_balance_of_specific_contract, 1);
     })
 
     it("Number of Mintable Left", async() => {
         const number_of_mintable_left = await cozyHome.numberOfMintable(cozyHomeContractOwner, test_number_of_mintable);
         assert.equal(number_of_mintable_left, test_number_of_mintable);
     })
+
+
+
 
 });
